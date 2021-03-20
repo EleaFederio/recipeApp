@@ -10,18 +10,19 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
+  final Function removeItem;
 
-  MealItem({
-    @required this.id,
-    @required this.title,
-    @required this.imageUrl,
-    @required this.duration,
-    @required this.complexity,
-    @required this.affordability
-  });
+  MealItem(
+      {@required this.id,
+      @required this.title,
+      @required this.imageUrl,
+      @required this.duration,
+      @required this.complexity,
+      @required this.affordability,
+      @required this.removeItem});
 
-  String get complexityText{
-    switch(complexity){
+  String get complexityText {
+    switch (complexity) {
       case Complexity.Simple:
         return 'Simple';
         break;
@@ -31,13 +32,13 @@ class MealItem extends StatelessWidget {
       case Complexity.Hard:
         return 'Hard';
         break;
-        default:
-          return "Unknown";
+      default:
+        return "Unknown";
     }
   }
 
-  String get getAffordability{
-    switch(affordability){
+  String get getAffordability {
+    switch (affordability) {
       case Affordability.Affordable:
         return 'Affordable';
         break;
@@ -54,10 +55,12 @@ class MealItem extends StatelessWidget {
 
   void selectMeal(BuildContext context) {
     // argument is passing data to the other widget
-    Navigator.of(context).pushNamed(
-        MealDetailScreen.routeName,
-        arguments: id
-    );
+    Navigator.of(context)
+        .pushNamed(MealDetailScreen.routeName, arguments: id)
+        .then((result) => {
+              // get the data from the pop method from meal_details_screen.dart
+              if (result != null) {removeItem(result)}
+            });
   }
 
   @override
@@ -96,10 +99,7 @@ class MealItem extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                     child: Text(
                       title,
-                      style: TextStyle(
-                        fontSize: 26.0,
-                        color: Colors.white
-                      ),
+                      style: TextStyle(fontSize: 26.0, color: Colors.white),
                       softWrap: true,
                       overflow: TextOverflow.fade,
                     ),
@@ -115,21 +115,27 @@ class MealItem extends StatelessWidget {
                   Row(
                     children: [
                       Icon(Icons.schedule),
-                      SizedBox(width: 6,),
+                      SizedBox(
+                        width: 6,
+                      ),
                       Text('${duration} min')
                     ],
                   ),
                   Row(
                     children: [
                       Icon(Icons.work),
-                      SizedBox(width: 6,),
+                      SizedBox(
+                        width: 6,
+                      ),
                       Text('${complexityText}')
                     ],
                   ),
                   Row(
                     children: [
                       Icon(Icons.attach_money),
-                      SizedBox(width: 6,),
+                      SizedBox(
+                        width: 6,
+                      ),
                       Text('${getAffordability}')
                     ],
                   )
